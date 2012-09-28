@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var cli = require('commander');
+
+cli
+	.version('0.0.1')
+	.option('-a, --app-name [name]', 'the name of the packaged application, required')
+	.option('-u, --app-server-url [url]', 'the url of the application\'s specification, required')
+	.option('-c, --client-output [directory]', 'output client files to the given directory [./client]', './client')
+	.option('-s, --server-output [directory]', 'output server files to the given directory [./server]', './server')
+	.parse(process.argv);
+
+if(cli.clientOutput && cli.serverOutput && cli.appName && cli.appServerUrl){
+	var Jet = require('../lib/jet');
+	var jet = new Jet();
+	jet.package(cli.clientOutput, cli.serverOutput, cli.appName, cli.appServerUrl);
+	console.log('Packaged app: ' + cli.appName);
+}else{
+	console.log('Missing required arguments, no app packaged. Try \'jet -h\' for help.');
+}

@@ -1,0 +1,21 @@
+{
+  "name": "jet"
+  , "description": "AppAviary application builder"
+  , "version": "0.0.1"
+  , "author": "Ian Serlin <ian@appaviary.com>"
+  , "contributors": [ 
+    { "name": "Ian Serlin", "email": "ian@appaviary.com" }
+    , { "name": "Cory O'Daniel", "email": "cory@appaviary.com" }
+  ]
+  , "dependencies": {
+    "commander": "1.0.4"
+    , "mkdirp": "0.3.4"
+    , "uglify-js": "*"
+    , "async": "*"
+    , "rimraf": "*"
+  }
+  , "repository": "git://github.com/appaviary/jet"
+  , "main": "index"
+  , "engines": { "node": "*" }
+}
+
