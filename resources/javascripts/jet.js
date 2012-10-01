@@ -4,43 +4,32 @@ $script.ready('bundle', function() {
 
 var Jet = function(config){
 	this.config = config;
+	this.templates = {};
+};
+
+// CORE APPLICATION METHODS
+
+Jet.prototype.template = function(templateID){
+	if(_.isUndefined(this.templates[templateID])){
+		this.templates[templateID] = Handlebars.compile($('#'+templateID).text());
+	}
+	return this.templates[templateID];
+};
+
+Jet.prototype.injectView = function(viewID){
+	var definition = this.viewDefinition[viewID];
+	// find and compile template
+	var template = this.template(definition.template);
+	console.log(template({}));
+	// load its data
+
+};
+
+Jet.prototype.processViews = function(views){
+	console.log('processing views', views);
 };
 
 // EVENT HANDLERS
-
-Jet.prototype.onApplicationDefinitionLoaded = function(definition) {
-	this.loadViews(definition.views);
-	this.loadTemplates(definition.templates);
-	this.loadStyles(definition.styles);
-};
-
-Jet.prototype.onViewsLoaded = function(views){
-	console.log('TODO: process views', views);
-};
-
-Jet.prototype.onTemplatesLoaded = function(templates){
-	$(templates).appendTo('body');
-};
-
-Jet.prototype.onStylesLoaded = function(styles){
-	$([
-		'<style type="text/css">'
-		, styles
-		, '</style>'
-	].join('')).appendTo('head');
-};
-
-Jet.prototype.loadViews = function(url){
-	this.load(url, this.onViewsLoaded);
-};
-
-Jet.prototype.loadTemplates = function(url){
-	this.load(url, this.onTemplatesLoaded);
-};
-
-Jet.prototype.loadStyles = function(url){
-	this.load(url, this.onStylesLoaded);
-};
 
 // LOAD API
 
@@ -90,11 +79,50 @@ Jet.prototype.checkForUpdates = function(){
 // INITIALIZATION
 
 Jet.prototype.launch = function(){
+	var self = this;
 	// this.checkForUpdates();
-	this.load(this.config.applicationUrl, this.onApplicationDefinitionLoaded);
+	async.waterfall([
+		function(callback){
+			self.load(self.config.applicationUrl, function(definition){
+				self.definition = definition;
+				callback(null, definition);
+			});
+		}
+		, function(definition, callback){
+			async.auto({
+				styles: function(callback){
+					self.load(definition.styles, function(styles){
+						self.styleDefinition = styles;
+						$([
+							'<style type="text/css">'
+							, styles
+							, '</style>'
+						].join('')).appendTo('head');
+						callback(null, styles);
+					});
+				}
+				, templates: function(callback){
+					self.load(definition.templates, function(templates){
+						self.templateDefintion = templates;
+						$(templates).appendTo('body');
+						callback(null, templates);
+					});
+				}
+				, views: ['templates', function(callback){
+					self.load(definition.views, function(views){
+						self.viewDefinition = views;
+						self.processViews(views);
+						callback(null, views);
+					});
+				}]
+			}, callback);
+		}
+	], function(err, results){
+		console.log('boot complete', err, results);
+	});
 	return this;
-}
+};
 
 var app = new Jet(CONFIG).launch();
-
+window.app = app;
 });
