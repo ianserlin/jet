@@ -1,0 +1,5 @@
+{
+	"views": "http://localhost:3030/resources/views.json"
+	, "templates": "http://localhost:3030/resources/templates.html"
+	, "styles": "http://localhost:3030/resources/stylesheets/style.css"
+}

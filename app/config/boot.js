@@ -1,3 +1,4 @@
 var CONFIG = {
-	"applicationUrl": "http://localhost:3030/jet/application.json"
+	"baseUrl": "http://localhost:3030"
+	, "applicationUrl": "http://localhost:3030/resources/application.json"
 };
