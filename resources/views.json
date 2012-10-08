@@ -1,8 +1,14 @@
 {
-	"index": {
-		"title": "Wineries"
-		, "icon": "star"
-		, "data": "wineries"
+	"chrome": {
+		"template": "chrome"
+	}
+	, "index": {
+		"chrome": {
+			"triggerOneIcon": ""
+			, "triggerOneIcon": "icon-globe"
+			, "title": "Wineries"
+		}
+		, "data": ["504792dccd42cb1dc90000a4"]
 		, "template": "index"
 		, "actions": {
 			"one": {

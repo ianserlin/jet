@@ -1,0 +1,25 @@
+body {
+	width: 100%;
+	height: 100%;
+}
+
+h1 {
+	color: #F00;
+}
+
+.titleBar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 40px;
+	background: -webkit-linear-gradient(top, #b7deed 0%,#71ceef 50%,#21b4e2 51%,#b7deed 100%);
+}
+
+.pageContent {
+	position: fixed;
+	top: 40px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}

@@ -2,4 +2,5 @@
 	"views": "http://localhost:3030/resources/views.json"
 	, "templates": "http://localhost:3030/resources/templates.html"
 	, "styles": "http://localhost:3030/resources/stylesheets/style.css"
+	, "data": "http://appaviary.com/api/apps/5042e2fbcd42cb1123000003.jsonp"
 }
