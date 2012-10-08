@@ -1,6 +1,195 @@
 {
-	"views": "http://localhost:3030/resources/views.json"
-	, "templates": "http://localhost:3030/resources/templates.html"
-	, "styles": "http://localhost:3030/resources/stylesheets/style.css"
-	, "data": "http://appaviary.com/api/apps/5042e2fbcd42cb1123000003.jsonp"
+	"templates": "http://localhost:3030/resources/templates.js",
+	"styles": "http://localhost:3030/resources/stylesheets/style.css",
+	"views": {
+		"chrome": {
+			"template": "chrome"
+		}
+		, "index": {
+			"chrome": {
+				"triggerOneIcon": ""
+				, "triggerOneIcon": "icon-globe"
+				, "title": "Wineries"
+			}
+			, "data": ["504792dccd42cb1dc90000a4"]
+			, "template": "index"
+			, "actions": {
+				"one": {
+					"before": []
+					, "action": {
+						"type": "pageTransition"
+						, "destination": "details"
+						, "animation": "slideRight"
+					}
+					, "after": []
+				}
+			}
+		}
+	},
+
+    "id": "5042e2fbcd42cb1123000003",
+    "uuid": "app_5042e2fbcd42cb1123000003",
+    "name": "Bearded Sommelier",
+    "last_deployed_at": "2012-09-05T17:58:52+00:00",
+    "version": 1346867932,
+    "spec": "http://appaviary.com/api/apps/5042e2fbcd42cb1123000003.json",
+    "proxies": [{
+        "id": "504792dccd42cb1dc90000a4",
+        "singular_name": "Winery",
+        "plural_name": "Wineries",
+        "name_label": "Name",
+        "labels": {
+            "column_5042e347cd42cb1123000021": "Good for Groups",
+            "column_5042e35ccd42cb1123000025": "Email",
+            "column_5042e361cd42cb1123000029": "Phone",
+            "column_5042e369cd42cb112300002d": "Bearded Notes",
+            "column_5042e376cd42cb1123000031": "Membership Price",
+            "column_5042ecb7cd42cb274400003a": "Sub Region",
+            "column_5042ecbdcd42cb274400003e": "Description",
+            "column_504792d7cd42cb1dc9000096": "Tasting Fee",
+            "join_5042e318cd42cb1123000011": "Gallery",
+            "join_5042e325cd42cb1123000015": "Operating Hours",
+            "join_5042e336cd42cb112300001d": "Address",
+            "join_5042ec10cd42cb274400000a": "Website"
+        },
+        "document_root": "http://appaviary.com/api/proxies/504792dccd42cb1dc90000a4/documents.json",
+        "properties": [{
+            "id": "504792dccd42cb1dc90000a6",
+            "uuid": "column_5042e347cd42cb1123000021",
+            "name": "Good for Groups",
+            "kind": "yes_or_no",
+            "created_at": "2012-09-02T04:40:39+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "display_input": "checkbox",
+            "yes_label": "yes",
+            "no_label": "no"
+        }, {
+            "id": "504792dccd42cb1dc90000a8",
+            "uuid": "column_5042e35ccd42cb1123000025",
+            "name": "Email",
+            "kind": "email",
+            "created_at": "2012-09-02T04:41:00+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false
+        }, {
+            "id": "504792dccd42cb1dc90000aa",
+            "uuid": "column_5042e361cd42cb1123000029",
+            "name": "Phone",
+            "kind": "phone",
+            "created_at": "2012-09-02T04:41:05+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false
+        }, {
+            "id": "504792dccd42cb1dc90000ac",
+            "uuid": "column_5042e369cd42cb112300002d",
+            "name": "Bearded Notes",
+            "kind": "text",
+            "created_at": "2012-09-02T04:41:13+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "display_input": "textarea"
+        }, {
+            "id": "504792dccd42cb1dc90000ae",
+            "uuid": "column_5042e376cd42cb1123000031",
+            "name": "Membership Price",
+            "kind": "money",
+            "created_at": "2012-09-02T04:41:26+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "currency": "USD"
+        }, {
+            "id": "504792dccd42cb1dc90000b0",
+            "uuid": "column_5042ecb7cd42cb274400003a",
+            "name": "Sub Region",
+            "kind": "text",
+            "created_at": "2012-09-02T05:20:55+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "display_input": "input"
+        }, {
+            "id": "504792dccd42cb1dc90000b2",
+            "uuid": "column_5042ecbdcd42cb274400003e",
+            "name": "Description",
+            "kind": "text",
+            "created_at": "2012-09-02T05:21:01+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "display_input": "textarea"
+        }, {
+            "id": "504792dccd42cb1dc90000b4",
+            "uuid": "column_504792d7cd42cb1dc9000096",
+            "name": "Tasting Fee",
+            "kind": "money",
+            "created_at": "2012-09-05T17:58:47+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "is_required": false,
+            "currency": "USD"
+        }],
+        "relationships": [{
+            "id": "504792dccd42cb1dc90000b6",
+            "uuid": "join_5042e318cd42cb1123000011",
+            "name": "Gallery",
+            "kind": "image",
+            "created_at": "2012-09-02T04:39:52+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "cardinality": "many",
+            "readable_fields": ["created_at", "updated_at", "file", "caption", "height", "width"],
+            "writable_fields": ["file", "caption"]
+        }, {
+            "id": "504792dccd42cb1dc90000b8",
+            "uuid": "join_5042e325cd42cb1123000015",
+            "name": "Operating Hours",
+            "kind": "schedule",
+            "created_at": "2012-09-02T04:40:05+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "cardinality": "many",
+            "readable_fields": ["created_at", "updated_at", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "open_time", "close_time", "is_special_schedule", "special_start_date", "special_end_date"],
+            "writable_fields": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "open_time", "close_time", "is_special_schedule", "special_start_date", "special_end_date"]
+        }, {
+            "id": "504792dccd42cb1dc90000ba",
+            "uuid": "join_5042e336cd42cb112300001d",
+            "name": "Address",
+            "kind": "address",
+            "created_at": "2012-09-02T04:40:22+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "cardinality": "one",
+            "readable_fields": ["created_at", "updated_at", "label", "formatted_address", "coordinates", "address_components"],
+            "writable_fields": ["formatted_address", "label"]
+        }, {
+            "id": "504792dccd42cb1dc90000bc",
+            "uuid": "join_5042ec10cd42cb274400000a",
+            "name": "Website",
+            "kind": "hyperlink",
+            "created_at": "2012-09-02T05:18:08+00:00",
+            "updated_at": "2012-09-05T17:58:52+00:00",
+            "deleted_at": null,
+            "api_name": null,
+            "cardinality": "one",
+            "readable_fields": ["created_at", "updated_at", "url", "text"],
+            "writable_fields": ["url", "text"]
+        }]
+    }]
 }
