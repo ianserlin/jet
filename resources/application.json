@@ -8,7 +8,7 @@
 		, "index": {
 			"chrome": {
 				"triggerOneIcon": ""
-				, "triggerOneIcon": "icon-globe"
+				, "triggerTwoIcon": "icon-globe"
 				, "title": "Wineries"
 			}
 			, "data": ["504792dccd42cb1dc90000a4"]

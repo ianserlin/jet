@@ -14,7 +14,6 @@ $script.ready('bundle', function() {
 
 })(Zepto);
 
-
 // PROTOTYPE
 
 var Jet = function(config){
@@ -22,7 +21,7 @@ var Jet = function(config){
 	this.templates 		= {};
 	this.views 			= {};
 	this.data 			= {
-		chrome: null
+		chrome: {}
 	};
 	this.elementCounter = 0;
 	this.displayList	= [];
@@ -43,19 +42,15 @@ Jet.prototype.setupView = function(viewID){
 	this.views[viewID] 	= view;
 	this.body.append(view);
 	// TODO: animate on screen
-	// wire up all the actions
-	for(var key in spec.actions){
-		view.on('touchstart click', '.'+key, spec.actions[key], function(e){
-			console.log('click on', $(e.currentTarget), e.data);
-		});
-	}
+	this.data.chrome = spec.chrome;
+	if(this.chrome) this.chrome.replaceWith(this.templates.chrome(this.data.chrome));
 
 	// CREATE AND BIND THE DATA, update the chrome with the appropriate data from the view spec
 	// this.watch(this.data, 'chrome', function(propertyName, oldValue, newValue, jet){
 	// 	self.chrome = self.templates[chrome](self.data.chrome);
 	// 	self.body.find('.chrome').replaceWith(self.chrome);
 	// });
-	this.displayList.push(viewID);
+	this.displayList.unshift(viewID);
 	return view;
 };
 
@@ -77,6 +72,7 @@ Jet.prototype.createElementId = function(){
 
 Jet.prototype.initializeViews = function(){
 	this.chrome = this.setupView('chrome');
+	this.setupView('index');
 };
 
 Jet.prototype.generateRedrawFunction = function(viewID) {
@@ -101,12 +97,26 @@ Jet.prototype.gatherData = function(viewSpec){
 
 Jet.prototype.initializeActions = function(){
 	var self = this;
-	$('body').on('touchstart click', '.trigger', function(){
+	$('body').on('touchstart click', '[data-trigger]', function(){
 		self.onTrigger.apply(self, arguments);
 	});
 };
 
 // EVENT HANDLERS
+
+Jet.prototype.onTrigger = function(e){
+	var definition 		= app.viewDefinition
+		, displayList	= app.displayList
+		, length		= this.displayList.length
+		, trigger 		= $(e.currentTarget).data('trigger')
+		, action;
+	for(var i = 0; i < length; i++){
+		action = definition[displayList[i]].actions[trigger];
+		// TODO: perform the action
+		if(action){ break; }
+	}
+	console.log('clicked', action);
+};
 
 // LOAD API
 
