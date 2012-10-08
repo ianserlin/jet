@@ -1,3 +1,5 @@
+// async - 3: launch, setupView, gatherData
+
 $script.ready('bundle', function() {
 
 ;(function($){
@@ -31,27 +33,30 @@ var Jet = function(config){
 
 // CORE VIEW METHODS
 
-Jet.prototype.setupView = function(viewID){
-	var spec 			= this.viewDefinition[viewID];
+Jet.prototype.setupView = function(viewID, callback){
+	var self 		= this
+		, spec 		= this.viewDefinition[viewID]
+		, template 	= this.templates[spec.template];
 	// check if view is already in page
 	// var view = this.body.find('')
 	// it's not in the page, get the template
-	var template 		= this.templates[spec.template]
-		, data 			= this.gatherData(spec)
-		, view 			= $(template(data));
-	this.views[viewID] 	= view;
-	this.body.append(view);
-	// TODO: animate on screen
-	this.data.chrome = spec.chrome;
-	if(this.chrome) this.chrome.replaceWith(this.templates.chrome(this.data.chrome));
+	this.gatherData(spec, function(data){
+		console.log('gather data returned', arguments);
+		var view 			= $(template(data));
+		self.views[viewID] 	= view;
+		self.body.append(view);
+		// TODO: animate on screen
+		self.data.chrome = spec.chrome;
+		if(self.chrome) self.chrome.replaceWith(self.templates.chrome(self.data.chrome));
 
-	// CREATE AND BIND THE DATA, update the chrome with the appropriate data from the view spec
-	// this.watch(this.data, 'chrome', function(propertyName, oldValue, newValue, jet){
-	// 	self.chrome = self.templates[chrome](self.data.chrome);
-	// 	self.body.find('.chrome').replaceWith(self.chrome);
-	// });
-	this.displayList.unshift(viewID);
-	return view;
+		// CREATE AND BIND THE DATA, update the chrome with the appropriate data from the view spec
+		// this.watch(this.data, 'chrome', function(propertyName, oldValue, newValue, jet){
+		// 	self.chrome = self.templates[chrome](self.data.chrome);
+		// 	self.body.find('.chrome').replaceWith(self.chrome);
+		// });
+		self.displayList.unshift(viewID);
+		if(callback){callback(view)};
+	});
 };
 
 Jet.prototype.teardownView = function(viewID){
@@ -89,8 +94,31 @@ Jet.prototype.generateRedrawFunction = function(viewID) {
 
 // CORE DATA METHODS
 
-Jet.prototype.gatherData = function(viewSpec){
-	return {};
+Jet.prototype.gatherData = function(viewSpec, callback){
+	console.log(viewSpec.data);
+	if(typeof viewSpec.data == 'undefined'){ return callback({}) }
+	var self = this
+		, data = {}
+		, waiting = 0
+		, toLoad = []
+		, i;
+	for(i = 0; i < viewSpec.data.length; i++){
+		if(typeof this.data[viewSpec.data[i]] != 'undefined'){
+			data[viewSpec.data[i]] = this.data[viewSpec.data[i]];
+		}else{
+			waiting++;
+			toLoad.push(viewSpec.data[i]);
+		}
+	}
+	for(i = 0; i < toLoad.length; i++){
+		this.load(this.dataDefinition[toLoad[i]].document_root + 'p', 
+			(function(id){ 
+				return function(documents){
+					data[id] = documents;
+					if(--waiting < 1){ callback(data) }
+				};
+			})(toLoad[i]));
+	}
 };
 
 // CORE ACTION METHODS
@@ -171,7 +199,11 @@ Jet.prototype.launch = function(){
 	self.load(self.config.applicationUrl, function(definition){
 		self.definition 	= definition;
 		self.viewDefinition = definition.views;
-		self.dataDefinition	= definition.proxies;
+		self.dataDefinition	= {};
+		for(var i = 0; i < definition.proxies.length; i++){
+			// turn it into a hash
+			self.dataDefinition[definition.proxies[i].id] = definition.proxies[i];
+		}
 		$('head').append('<link rel="stylesheet" type="text/css" href="'+definition.styles+'"/>');
 		$.getScript(definition.templates, function(){
 			self.templates = Handlebars.templates;
