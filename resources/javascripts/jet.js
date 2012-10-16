@@ -2,19 +2,14 @@
 
 $script.ready('bundle', function() {
 
-;(function($){
-
-    $.getScript = function(url, success, error){
-        var script = document.createElement("script"),
-            $script = $(script);
-        script.src = url;
-
-        $("head").append(script);
-        $script.bind("load", success);
-        $script.bind("error", error);
-    };
-
-})(Zepto);
+// ACTION REGISTRY
+var Actions = {
+	pageTransition: function(jet, action, options){
+		jet.setupView(action.destination, options, function(){
+			console.log('view set up via actions registry: ' + action.destination, options)
+		});
+	}
+};
 
 // PROTOTYPE
 
@@ -25,7 +20,6 @@ var Jet = function(config){
 	this.data 			= {
 		chrome: {}
 	};
-	this.elementCounter = 0;
 	this.displayList	= [];
 
 	this.body			= $('body');
@@ -33,30 +27,38 @@ var Jet = function(config){
 
 // CORE VIEW METHODS
 
-Jet.prototype.setupView = function(viewID, callback){
+Jet.prototype.setupView = function(viewID, options, callback){
+	if(typeof options == 'function'){ 
+		callback = options; 
+		options = null; 
+	}
+
 	var self 		= this
 		, spec 		= this.viewDefinition[viewID]
-		, template 	= this.templates[spec.template];
+		, template 	= this.templates[spec.template]
+		, renderFn 	= function(data){
+			console.log('gather data returned', data);
+			// TODO: animate on screen
+			var view = $(template(data));
+			view.on('click touchstart', '[data-trigger]', function(e){
+				self.onTrigger.apply(self,[e,spec]);
+			});
+			self.body.append(view);
+			if(spec.chrome){
+				self.renderChrome(spec.chrome);
+			}
+			self.views[viewID] = view;
+			self.displayList.unshift(viewID);
+			if(callback){callback(view)};
+		};
 	// check if view is already in page
 	// var view = this.body.find('')
 	// it's not in the page, get the template
-	this.gatherData(spec, function(data){
-		console.log('gather data returned', arguments);
-		var view 			= $(template(data));
-		self.views[viewID] 	= view;
-		self.body.append(view);
-		// TODO: animate on screen
-		self.data.chrome = spec.chrome;
-		if(self.chrome) self.chrome.replaceWith(self.templates.chrome(self.data.chrome));
-
-		// CREATE AND BIND THE DATA, update the chrome with the appropriate data from the view spec
-		// this.watch(this.data, 'chrome', function(propertyName, oldValue, newValue, jet){
-		// 	self.chrome = self.templates[chrome](self.data.chrome);
-		// 	self.body.find('.chrome').replaceWith(self.chrome);
-		// });
-		self.displayList.unshift(viewID);
-		if(callback){callback(view)};
-	});
+	if(options && options.data){
+		renderFn(options.data);
+	}else{
+		this.gatherData(spec, renderFn);
+	}
 };
 
 Jet.prototype.teardownView = function(viewID){
@@ -71,30 +73,31 @@ Jet.prototype.teardownView = function(viewID){
 	}
 };
 
-Jet.prototype.createElementId = function(){
-	return 'jet'+this.elementCounter++;
+Jet.prototype.renderChrome = function(spec){
+	this.data.chrome = spec || {};
+	var chrome = $(this.templates.chrome(this.data.chrome));
+	chrome.addClass('chrome');
+	if(this.chrome){
+		this.chrome.replaceWith(chrome);
+	}else{
+		this.body.append(chrome);
+	}
+	this.chrome = chrome
 };
 
 Jet.prototype.initializeViews = function(){
-	this.chrome = this.setupView('chrome');
-	this.setupView('index');
-};
-
-Jet.prototype.generateRedrawFunction = function(viewID) {
 	var self = this;
-	return function(propertyName, oldValue, newValue, jet){
-		var existingView = self.body.find(viewID);
-		if(existingView.length == 1){
-			$(existingView).remove();
-		}
-		self.body.append(this.views[viewID].view);
-		self.data[viewID]
-	}
+	this.renderChrome();
+	this.body.on('click touchstart', '.chrome [data-trigger]', function(){
+		self.onChromeTrigger.apply(self, arguments);
+	});
+	this.setupView('index');
 };
 
 // CORE DATA METHODS
 
 Jet.prototype.gatherData = function(viewSpec, callback){
+	var self = this;
 	console.log(viewSpec.data);
 	if(typeof viewSpec.data == 'undefined'){ return callback({}) }
 	var self = this
@@ -114,7 +117,7 @@ Jet.prototype.gatherData = function(viewSpec, callback){
 		this.load(this.dataDefinition[toLoad[i]].document_root + 'p', 
 			(function(id){ 
 				return function(documents){
-					data[id] = documents;
+					self.data[id] = data[id] = documents;
 					if(--waiting < 1){ callback(data) }
 				};
 			})(toLoad[i]));
@@ -123,27 +126,47 @@ Jet.prototype.gatherData = function(viewSpec, callback){
 
 // CORE ACTION METHODS
 
-Jet.prototype.initializeActions = function(){
-	var self = this;
-	$('body').on('touchstart click', '[data-trigger]', function(){
-		self.onTrigger.apply(self, arguments);
-	});
+Jet.prototype.onTrigger = function(e, spec){
+	var triggerName = $(e.currentTarget).data('trigger')
+		, trigger 	= spec.actions[triggerName]
+		, fn 		= Actions[trigger.action.type];
+
+	var itemId = $(e.currentTarget).data('item-id')
+		, collectionId = $(e.currentTarget).data('collection-id')
+		, data;
+	if(collectionId){
+		data = this.data[collectionId];
+		if(itemId && data){
+			for(var i = 0; i < data.length; i++){
+				if(data[i].id == itemId){
+					data = data[i];
+					break;
+				}
+			}
+		}
+	}
+	// TODO: before actions
+	fn(this, trigger.action, {data: data});
+	// TODO: after actions
 };
 
-// EVENT HANDLERS
-
-Jet.prototype.onTrigger = function(e){
-	var definition 		= app.viewDefinition
-		, displayList	= app.displayList
+Jet.prototype.onChromeTrigger = function(e){
+	var definition 		= this.viewDefinition
+		, displayList	= this.displayList
 		, length		= this.displayList.length
 		, trigger 		= $(e.currentTarget).data('trigger')
-		, action;
+		, action, view, viewID, spec;
 	for(var i = 0; i < length; i++){
-		action = definition[displayList[i]].actions[trigger];
-		// TODO: perform the action
-		if(action){ break; }
+		spec = definition[displayList[i]];
+		if(spec.chrome && spec.chrome.actions && spec.chrome.actions[trigger]){
+			view = spec;
+			viewID = displayList[i];			
+			action = spec.chrome.actions[trigger];
+			// TODO: perform the action
+			break;
+		}
 	}
-	console.log('clicked', action);
+	console.log('clicked chrome', action, view, viewID);
 };
 
 // LOAD API
@@ -205,9 +228,8 @@ Jet.prototype.launch = function(){
 			self.dataDefinition[definition.proxies[i].id] = definition.proxies[i];
 		}
 		$('head').append('<link rel="stylesheet" type="text/css" href="'+definition.styles+'"/>');
-		$.getScript(definition.templates, function(){
-			self.templates = Handlebars.templates;
-			self.initializeActions();
+		$script(definition.templates, function(){
+  			self.templates = Handlebars.templates;
 			self.initializeViews();	
 		});
 	});

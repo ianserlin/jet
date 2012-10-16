@@ -10,6 +10,15 @@
 				"triggerOneIcon": ""
 				, "triggerTwoIcon": "icon-globe"
 				, "title": "Wineries"
+				, "actions": {
+					"two": {
+						"action": {
+							"type": "pageTransition"
+							, "destination": "map"
+							, "animation": "slideRight"
+						}
+					}
+				}
 			}
 			, "data": ["504792dccd42cb1dc90000a4"]
 			, "template": "index"
@@ -25,6 +34,24 @@
 				}
 			}
 		}
+        , "details": {
+            "chrome": {
+                "triggerOneIcon": "icon-arrow-left"
+                , "triggerTwoIcon": ""
+                , "title": "Winery"
+                , "actions": {
+                    "one": {
+                        "action": {
+                            "type": "pageTransition"
+                            , "destination": "back"
+                            , "animation": "slideLeft"
+                        }
+                    }
+                }
+            }
+            , "data": ["selected_504792dccd42cb1dc90000a4"]
+            , "template": "details"
+        }
 	},
 
     "id": "5042e2fbcd42cb1123000003",

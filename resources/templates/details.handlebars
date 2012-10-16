@@ -1,0 +1,88 @@
+<div class="pageContent">
+  <h1>llamas</h1>
+  <h3 class='text-center'>{{name}}</h3>
+
+  <!-- Operating Hours -->
+  {{#if join_5042e325cd42cb1123000015}}
+  <section class="text-center">
+    {{openHours join_5042e325cd42cb1123000015}}
+  </section>
+  {{/if}}
+
+  {{image join_5042e318cd42cb1123000011 size="preview_url"}}
+
+  <!-- Description -->
+  <section>
+    {{column_5042ecbdcd42cb274400003e}}
+  </section>
+
+  <!-- bearded notes -->
+  {{#if column_5042e369cd42cb112300002d}}
+  <section>
+    <label>Bearded Notes</label>
+    {{column_5042e369cd42cb112300002d}}
+  </section>
+  <br/>
+  {{/if}}
+
+  <div class='map-container'>
+    <div class='map'></div>
+    <address>
+      <a target="_blank" href="http://maps.google.com/maps?q={{latlng join_5042e336cd42cb112300001d.[0]}}">{{join_5042e336cd42cb112300001d.[0].formatted_address}}</a>
+    </address>
+  </div>
+
+  <br/>
+
+  <section>
+    <label>Contact</label>
+    {{#if column_5042e361cd42cb1123000029}}
+    <a class='btn btn-100' href='tel:+1-{{column_5042e361cd42cb1123000029}}'>
+      <h4>
+      <i class='icon-phone'></i> Call {{column_5042e361cd42cb1123000029}}
+      </h4>
+    </a>
+    <br/>
+    <br/>
+    {{/if}}
+    <address>
+      {{#if join_5042ec10cd42cb274400000a}}
+      <abbr title="Website">W:</abbr> {{website join_5042ec10cd42cb274400000a}}
+      <br/>
+      {{/if}}
+      {{#if column_5042e35ccd42cb1123000025}}
+      <abbr title="Email">E:</abbr> {{email column_5042e35ccd42cb1123000025}}
+      <br/>
+      {{/if}}
+    </address>
+  </section>
+
+  <!-- Good for groups -->
+  {{#if column_5042e347cd42cb1123000021}}
+  <section>
+    <strong>Good for groups:</strong> 
+    {{column_5042e347cd42cb1123000021}}
+  </section>
+  {{/if}}
+  <!-- Tasting Fee -->
+  {{#if column_504792d7cd42cb1dc9000096}}
+  <section>
+    <strong>Tasting Fee:</strong> 
+    {{currency column_504792d7cd42cb1dc9000096}}
+  </section>
+  {{/if}}
+  <!-- Membership price -->
+  {{#if column_5042e376cd42cb1123000031}}
+  <section>
+    <strong>Membership Price:</strong> 
+    {{column_5042e376cd42cb1123000031}}
+  </section>
+  {{/if}}
+  <!-- Sub region -->
+  {{#if column_5042ecb7cd42cb274400003a}}
+  <section>
+    <strong>Sub region:</strong> 
+    {{column_5042ecb7cd42cb274400003a}}
+  </section>
+  {{/if}}
+</div>

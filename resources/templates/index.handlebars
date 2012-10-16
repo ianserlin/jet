@@ -1,7 +1,14 @@
-<div class='pageContent'>
-	<ul>
-	{{#each 504792dccd42cb1dc90000a4}}
-		<li>{{name}}</li>
-	{{/each}}
-	</ul>
+<div class='pageContent scrollList'>
+	<ul class='unstyled'>
+      {{#each 504792dccd42cb1dc90000a4}}
+        <li data-trigger='one' data-collection-id='504792dccd42cb1dc90000a4' data-item-id='{{id}}'>
+          <div class='backgroundImage'>
+            <img src='{{join_5042e318cd42cb1123000011.[0].preview_url}}'/>    
+            <div class='information'>
+              <h5>{{name}}</h5>
+            </div>
+          </div>
+        </li>
+      {{/each}}
+    </ul>
 </div>
